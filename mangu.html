@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Lirik & Efek Cinta</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .lyrics-container {
+      background: rgba(0,0,0,0.4);
+      padding: 20px;
+      border-radius: 20px;
+      max-width: 700px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      margin-bottom: 40px;
+      min-height: 200px;
+    }
+
+    .line {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .character {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      background: pink;
+      border-radius: 50%;
+      animation: bounce 2s infinite;
+      margin-bottom: 20px;
+    }
+
+    .eyes {
+      position: absolute;
+      top: 30px;
+      left: 20px;
+      width: 60px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .eye {
+      width: 12px;
+      height: 12px;
+      background: black;
+      border-radius: 50%;
+    }
+
+    .hearts {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: floatHearts 2s infinite;
+    }
+
+    .heart {
+      color: red;
+      font-size: 24px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    @keyframes floatHearts {
+      0% { opacity: 0; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(-15px); }
+      100% { opacity: 0; transform: translateY(-30px); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .love {
+      position: fixed;
+      top: -30px;
+      font-size: 20px;
+      color: pink;
+      font-weight: bold;
+      animation: fall 5s linear infinite;
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+
+    audio {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Karakter jatuh cinta -->
+  <div class="character">
+    <div class="hearts">
+      <div class="heart">❤️</div>
+    </div>
+    <div class="eyes">
+      <div class="eye"></div>
+      <div class="eye"></div>
+    </div>
+  </div>
+
+  <!-- Lirik Lagu -->
+  <div class="lyrics-container" id="lyrics"></div>
+
+  <!-- Musik -->
+  <audio id="bgMusic" src="mangu.mp3" controls></audio>
+</div>
+
+<script>
+  const lyrics = [
+    "Jangan salahkan faham ku kini, tertuju oooo...",
+    " ",
+    "Siapa yg tau",
+    "Siapa yg mau",
+    "Kau di sana",
+    "Aku diseberangmu",
+    "Cerita kita sulit dicerna",
+    "Tak lagi sama",
+    "Cara berdoa",
+    "Cerita kita sulit diterka",
+    "Tak lagi sama",
+    "Arah kiblatnya"
+  ];
+
+  const container = document.getElementById("lyrics");
+  const audio = document.getElementById("bgMusic");
+
+  function tampilkanLirik() {
+    container.innerHTML = "";
+
+    lyrics.forEach((line, index) => {
+      setTimeout(() => {
+        const div = document.createElement("div");
+        div.classList.add("line");
+        div.textContent = line;
+        container.appendChild(div);
+      }, index * 3300); // lebih lambat: 4 detik per baris
+    });
+  }
+
+  // Jalankan lirik saat audio mulai
+  audio.addEventListener("play", () => {
+    if (!audio.dataset.lirikDimulai) {
+      tampilkanLirik();
+      audio.dataset.lirikDimulai = "true";
+    }
+  });
+
+  // Efek hujan love saat lagu selesai
+  audio.addEventListener("ended", () => {
+    for (let i = 0; i < 100; i++) {
+      setTimeout(() => {
+        buatLove();
+      }, i * 100);
+    }
+  });
+
+  function buatLove() {
+    const love = document.createElement("div");
+    love.className = "love";
+    love.innerText = "Love";
+    love.style.left = Math.random() * 100 + "vw";
+    love.style.fontSize = (16 + Math.random() * 20) + "px";
+    document.body.appendChild(love);
+
+    setTimeout(() => {
+      love.remove();
+    }, 5000);
+  }
+</script>
+
+</body>
+</html>
